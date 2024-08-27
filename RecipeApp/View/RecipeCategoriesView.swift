@@ -32,7 +32,7 @@ struct RecipeCategoriesView: View {
                                 .foregroundColor(Color(UIColor.systemBackground))
                                 .cornerRadius(10)
                                 .shadow(radius: 3)
-                                .frame(width: 110, height: 30)
+                                .frame(width: 110, height: 45)
                                 .onTapGesture {
                                     if category == RecipeType.dessert.rawValue {
                                         recipeType = .dessert

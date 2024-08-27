@@ -23,7 +23,6 @@ struct DessertRecipeView: View {
                             .foregroundColor(Color(UIColor.systemBackground))
                             .cornerRadius(15)
                             .frame(height: 100)
-                            .padding(.horizontal)
                             .shadow(radius: 2)
                         
                         HStack(spacing: 15) {
@@ -34,7 +33,7 @@ struct DessertRecipeView: View {
                                         .aspectRatio(contentMode: .fill)
                                         .frame(width: 80, height: 80)
                                         .cornerRadius(10)
-                                        .padding(.leading, 30)
+                                        .padding(.leading, 10)
                                 } placeholder: {
                                     ZStack {
                                         Color.gray
@@ -42,7 +41,7 @@ struct DessertRecipeView: View {
                                             .cornerRadius(10)
                                         ProgressView()
                                     }
-                                    .padding(.leading, 30)
+                                    .padding(.leading, 10)
                                 }
                             }
                             
@@ -53,6 +52,7 @@ struct DessertRecipeView: View {
                             DessertRecipeDetailsView(mealId: $mealId)
                         })
                     }
+                    .padding([.horizontal, .top], 5)
                     .onTapGesture {
                         presentDetailsView = true
                         mealId = meal.mealId ?? ""
