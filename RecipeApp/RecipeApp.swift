@@ -1,6 +1,6 @@
 //
-//  FetchReceipeAppApp.swift
-//  FetchReceipeApp
+//  RecipeApp.swift
+//  RecipeApp
 //
 //  Created by Dambar Bista on 8/24/24.
 //
@@ -8,10 +8,10 @@
 import SwiftUI
 
 @main
-struct FetchReceipeAppApp: App {
+struct RecipeApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RecipeLandingView()
         }
     }
 }
