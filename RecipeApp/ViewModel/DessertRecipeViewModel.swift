@@ -8,19 +8,20 @@
 import Foundation
 
 class DessertRecipeViewModel: ObservableObject {
-    let dessertRecipeService = DessertRecipeService()
-    
     @Published var meals = [Meal]()
    
     var showErrorMessage = false
+    
+    init() {
         
+    }
+    
+    @MainActor
     func getDessertList() async   {
         do {
-            let sortedMeals = try await dessertRecipeService.getDessertRecipes().compactMap({ $0 }).sorted(by: { $0.mealName ?? "" < $1.mealName ?? "" })
+            let sortedMeals = try await DessertRecipeService.sharedInstance.getDessertRecipes().compactMap({ $0 }).sorted(by: { $0.mealName ?? "" < $1.mealName ?? "" })
             
-            await MainActor.run() {
-                meals = sortedMeals
-            }
+            meals = sortedMeals
         } catch let error {
             // Handle Error here
             showErrorMessage = true

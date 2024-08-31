@@ -21,48 +21,87 @@ struct MealDetails: Codable {
     let strMealThumb: String?
     let strTags: String?
     let strYoutube: String?
-    let strIngredient1: String?
-    let strIngredient2: String?
-    let strIngredient3: String?
-    let strIngredient4: String?
-    let strIngredient5: String?
-    let strIngredient6: String?
-    let strIngredient7: String?
-    let strIngredient8: String?
-    let strIngredient9: String?
-    let strIngredient10: String?
-    let strIngredient11: String?
-    let strIngredient12: String?
-    let strIngredient13: String?
-    let strIngredient14: String?
-    let strIngredient15: String?
-    let strIngredient16: String?
-    let strIngredient17: String?
-    let strIngredient18: String?
-    let strIngredient19: String?
-    let strIngredient20: String?
-    let strMeasure1: String?
-    let strMeasure2: String?
-    let strMeasure3: String?
-    let strMeasure4: String?
-    let strMeasure5: String?
-    let strMeasure6: String?
-    let strMeasure7: String?
-    let strMeasure8: String?
-    let strMeasure9: String?
-    let strMeasure10: String?
-    let strMeasure11: String?
-    let strMeasure12: String?
-    let strMeasure13: String?
-    let strMeasure14: String?
-    let strMeasure15: String?
-    let strMeasure16: String?
-    let strMeasure17: String?
-    let strMeasure18: String?
-    let strMeasure19: String?
-    let strMeasure20: String?
+    let ingredients: [Ingredient]?
     let strSource: String?
     let strImageSource: String?
     let strCreativeCommonsConfirmed: String?
     let dateModified: String?
+    
+    init(idMeal: String? = nil, strMeal: String? = nil, strDrinkAlternate: String? = nil, strCategory: String? = nil, strArea: String? = nil, strInstructions: String? = nil, strMealThumb: String? = nil, strTags: String? = nil, strYoutube: String? = nil, ingredients: [Ingredient]? = nil, strSource: String? = nil, strImageSource: String? = nil, strCreativeCommonsConfirmed: String? = nil, dateModified: String? = nil) {
+        self.idMeal = idMeal
+        self.strMeal = strMeal
+        self.strDrinkAlternate = strDrinkAlternate
+        self.strCategory = strCategory
+        self.strArea = strArea
+        self.strInstructions = strInstructions
+        self.strMealThumb = strMealThumb
+        self.strTags = strTags
+        self.strYoutube = strYoutube
+        self.ingredients = ingredients
+        self.strSource = strSource
+        self.strImageSource = strImageSource
+        self.strCreativeCommonsConfirmed = strCreativeCommonsConfirmed
+        self.dateModified = dateModified
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        idMeal = try container.decode(String.self, forKey: .idMeal)
+        strMeal = try container.decode(String.self, forKey: .strMeal)
+        strDrinkAlternate = try container.decodeIfPresent(String.self, forKey: .strDrinkAlternate)
+        strCategory = try container.decode(String.self, forKey: .strCategory)
+        strArea = try container.decode(String.self, forKey: .strArea)
+        strInstructions = try container.decode(String.self, forKey: .strInstructions)
+        strMealThumb = try container.decode(String.self, forKey: .strMealThumb)
+        strTags = try container.decodeIfPresent(String.self, forKey: .strTags)
+        strYoutube = try container.decode(String.self, forKey: .strYoutube)
+        strSource = try container.decodeIfPresent(String.self, forKey: .strSource)
+        strImageSource = try container.decodeIfPresent(String.self, forKey: .strImageSource)
+        strCreativeCommonsConfirmed = try container.decodeIfPresent(String.self, forKey: .strCreativeCommonsConfirmed)
+        dateModified = try container.decodeIfPresent(String.self, forKey: .dateModified)
+        
+        
+        let dynamicContainer = try decoder.container(keyedBy: DynamicKeys.self)
+        var ingredients: [Ingredient] = []
+        
+        /// Decode all keys and identify ingredients and measures
+        for key in dynamicContainer.allKeys {
+            if key.stringValue.starts(with: "strIngredient"),
+               let ingredientName = try dynamicContainer.decodeIfPresent(String.self, forKey: key),
+               !ingredientName.isEmpty {
+                let measureKey = DynamicKeys(stringValue: key.stringValue.replacingOccurrences(of: "strIngredient", with: "strMeasure"))!
+                if let measure = try dynamicContainer.decodeIfPresent(String.self, forKey: measureKey), !measure.isEmpty {
+                    ingredients.append(Ingredient(name: ingredientName, measure: measure))
+                }
+            }
+        }
+        
+        self.ingredients = ingredients
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case idMeal, strMeal, strDrinkAlternate, strCategory, strArea, strInstructions, strMealThumb, strTags, strYoutube, strSource, strImageSource, strCreativeCommonsConfirmed, dateModified
+    }
+}
+
+struct Ingredient: Codable {
+    let name: String
+    let measure: String
+}
+
+struct DynamicKeys: CodingKey {
+    static let ingredient = "strIngredient"
+    static let measure = "strMeasure"
+    
+    var stringValue: String
+    var intValue: Int?
+    
+    init?(stringValue: String) {
+        self.stringValue = stringValue
+    }
+    
+    init?(intValue: Int) {
+        return nil
+    }
 }

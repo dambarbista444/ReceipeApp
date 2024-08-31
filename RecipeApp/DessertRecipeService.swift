@@ -8,7 +8,9 @@
 import Foundation
 
 class DessertRecipeService {
-    func getDessertRecipes() async throws -> [Meal] {
+    static let sharedInstance = DessertRecipeService()
+    
+     func getDessertRecipes() async throws -> [Meal] {
         guard let urlString = URL(string: "https://themealdb.com/api/json/v1/1/filter.php?c=Dessert") else {
             print("Invalid URL")
             throw URLError(.badURL)
@@ -25,7 +27,7 @@ class DessertRecipeService {
         return desertRecipe.meals
     }
     
-    func getDessertRecipesDetails(by mealId: String) async throws ->  [MealDetails] {
+     func getDessertRecipesDetails(by mealId: String) async throws ->  [MealDetails] {
         guard let urlString = URL(string: "\("https://themealdb.com/api/json/v1/1/lookup.php?i=\(mealId)")") else {
             print("Invalid URL")
             throw URLError(.badURL)

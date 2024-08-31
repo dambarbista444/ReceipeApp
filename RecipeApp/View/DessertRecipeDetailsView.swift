@@ -95,11 +95,11 @@ struct DessertRecipeDetailsView: View {
     }
     
     func setupIngredientView() -> some View {
-        ForEach(viewModel.getIngredientsWithMeasures(), id: \.0) { ingredient, measure in
+        ForEach(viewModel.ingredients, id: \.name) { ingredient in
             HStack(alignment: .top) {
                 /// Ingredients
                 VStack(alignment: .leading) {
-                    Text(ingredient)
+                    Text(ingredient.name)
                         .font(.subheadline)
                 }
                 
@@ -107,7 +107,7 @@ struct DessertRecipeDetailsView: View {
                 
                 /// Measure
                 VStack(alignment: .leading) {
-                    Text(measure)
+                    Text(ingredient.measure)
                         .font(.subheadline)
                 }
             }
