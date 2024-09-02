@@ -58,6 +58,7 @@ struct RecipeLandingView: View {
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(alignment: .leading) {
                         RecipeCategoriesView(searchText: searchText)
+                            .padding(.horizontal)
                     }
                 }
             }
