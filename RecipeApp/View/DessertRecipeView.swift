@@ -51,7 +51,6 @@ struct DessertRecipeView: View {
     
     func setupDessertListView() -> some View {
         VStack(alignment: .leading) {
-            
             ForEach(filteredmeals, id: \.self) { meal in
                 ZStack {
                     Rectangle()
@@ -83,9 +82,6 @@ struct DessertRecipeView: View {
                         Text(meal.mealName ?? "")
                         Spacer()
                     }
-                    .fullScreenCover(isPresented: $presentDetailsView, content: {
-                        DessertRecipeDetailsView(mealId: $selectedMealId)
-                    })
                 }
                 .padding([.horizontal, .top], 5)
                 .onTapGesture {
@@ -94,6 +90,9 @@ struct DessertRecipeView: View {
                 }
             }
         }
+        .fullScreenCover(isPresented: $presentDetailsView, content: {
+            DessertRecipeDetailsView(mealId: $selectedMealId)
+        })
     }
 }
 #Preview {
