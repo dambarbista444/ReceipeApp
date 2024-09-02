@@ -12,89 +12,95 @@ struct DessertRecipeDetailsView: View {
     
     @StateObject var viewModel = DessertRecipeDetailsViewModel()
     
-    @State var showErrorMessage = false
-    
     @Binding var mealId: String
     
     var body: some View {
-        VStack {
-            NavigationView {
-                ScrollView(.vertical) {
-                    VStack(alignment: .leading, spacing: 0) {
-                        GeometryReader { geometry in
-                            if let imageURL = viewModel.imageUrl(for: viewModel.mealImage) {
-                                AsyncImage(url: imageURL) { image in
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                        .frame(width: geometry.size.width, height: geometry.size.height)
-                                        .clipped()
-                                        .roundedCorner(30, corners: [.topLeft, .topRight])
-                                } placeholder: {
-                                    Color.gray
-                                        .frame(height: 350)
-                                }
-                            }
-                        }
-                        .padding(.bottom)
-                        .frame(height: 350)
-                        
-                        HStack {
-                            Text(viewModel.mealName)
-                                .fontWeight(.bold)
-                            Spacer()
-                            Text("⭐️ 4.5")
-                        }
-                        .padding()
-                        
-                        Text("\(LocalizedString.instructionsText) 📖")
-                            .fontWeight(.bold)
-                            .padding([.top, .leading])
-                        
-                        Text(viewModel.instructions)
-                            .font(.subheadline)
-                            .padding()
-                        
-                        Text("\(LocalizedString.ingredientsText) 🥣")
-                            .fontWeight(.bold)
-                            .padding([.top, .leading, .bottom])
-                        
-                        setupIngredientView()
+        NavigationView {
+            VStack {
+                switch viewModel.state {
+                case .loading:
+                    ProgressView {
+                        Text(LocalizedString.loadingText)
                     }
+                case .success:
+                    setupDessertDetailsView()
+                case .failure:
+                    Text(LocalizedString.serviceErrorMessage)
                 }
-                .task {
-                    await viewModel.getDessertList()
-                    showErrorMessage = viewModel.showErrorMessage
-                }
-                .alert(LocalizedString.serviceErrorMessage, isPresented: $showErrorMessage) {
-                    Button(LocalizedString.okText, role: .cancel, action: { })
-                }
-                
-                .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button(action: {
-                            presendMode.wrappedValue.dismiss()
-                        }, label: {
-                            ZStack {
-                                Circle()
-                                    .frame(width: 30, height: 30) // use in constant for height
-                                    .foregroundColor(.gray)
-                                Image(systemName: "chevron.left")
-                                    .foregroundColor(.black)
-                            }
-                        })
-                    }
-                }
-                .navigationTitle(viewModel.mealName)
-                .navigationBarTitleDisplayMode(.inline)
             }
-        }
-        .onAppear {
-            viewModel.mealId = mealId
+            .task {
+                await viewModel.getDessertDetails()
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {
+                        presendMode.wrappedValue.dismiss()
+                    }, label: {
+                        ZStack {
+                            Circle()
+                                .frame(width: 30, height: 30) // use in constant for height
+                                .foregroundColor(.gray)
+                            Image(systemName: "chevron.left")
+                                .foregroundColor(.black)
+                        }
+                    })
+                }
+            }
+            .onAppear {
+                viewModel.mealId = mealId
+            }
+            .navigationTitle(viewModel.mealName)
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
     
-    func setupIngredientView() -> some View {
+    private func setupDessertDetailsView() -> some View {
+        ScrollView(.vertical) {
+            VStack(alignment: .leading, spacing: 0) {
+                GeometryReader { geometry in
+                    if let imageURL = viewModel.imageUrl(for: viewModel.mealImage) {
+                        AsyncImage(url: imageURL) { image in
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: geometry.size.width, height: geometry.size.height)
+                                .clipped()
+                                .roundedCorner(30, corners: [.topLeft, .topRight])
+                        } placeholder: {
+                            Color.gray
+                                .frame(height: 350)
+                        }
+                    }
+                }
+                .padding(.bottom)
+                .frame(height: 350)
+                
+                HStack {
+                    Text(viewModel.mealName)
+                        .fontWeight(.bold)
+                    Spacer()
+                    Text("⭐️ 4.5")
+                }
+                .padding()
+                
+                Text("\(LocalizedString.instructionsText) 📖")
+                    .fontWeight(.bold)
+                    .padding([.top, .leading])
+                
+                Text(viewModel.instructions)
+                    .font(.subheadline)
+                    .padding()
+                
+                Text("\(LocalizedString.ingredientsText) 🥣")
+                    .fontWeight(.bold)
+                    .padding([.top, .leading, .bottom])
+                
+                setupIngredientView()
+            }
+        }
+    }
+    
+    private func setupIngredientView() -> some View {
         ForEach(viewModel.ingredients, id: \.name) { ingredient in
             HStack(alignment: .top) {
                 /// Ingredients
@@ -117,5 +123,5 @@ struct DessertRecipeDetailsView: View {
 }
 
 #Preview {
-    DessertRecipeDetailsView(showErrorMessage: false, mealId: .constant(""))
+    DessertRecipeDetailsView(mealId: .constant(""))
 }

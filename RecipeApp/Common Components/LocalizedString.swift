@@ -13,4 +13,5 @@ public class LocalizedString {
     public static var discoverTitleText: String { "Discover" }
     public static var serviceErrorMessage: String { "service is temporarily unavailable" }
     public static var okText: String { "OK" }
+    public static var loadingText: String { "Loading" }
 }

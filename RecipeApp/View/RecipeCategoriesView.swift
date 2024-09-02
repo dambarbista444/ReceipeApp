@@ -15,6 +15,8 @@ enum RecipeType: String {
 }
 
 struct RecipeCategoriesView: View {
+    var searchText: String
+    
     let categories = [RecipeType.dessert.rawValue,
                       RecipeType.dinner.rawValue,
                       RecipeType.breakfast.rawValue,
@@ -56,7 +58,7 @@ struct RecipeCategoriesView: View {
             // Display view/screen based user selection
             switch recipeType {
             case .dessert:
-                DessertRecipeView()
+                DessertRecipeView(searchText: searchText)
             case .dinner:
                 Text(RecipeType.dinner.rawValue)
                     .font(.title)
@@ -72,5 +74,5 @@ struct RecipeCategoriesView: View {
 }
 
 #Preview {
-    RecipeCategoriesView()
+    RecipeCategoriesView(searchText: "")
 }

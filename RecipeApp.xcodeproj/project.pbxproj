@@ -22,6 +22,7 @@
 		E161FED22C7A451300B4561D /* DessertRecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E161FED12C7A451300B4561D /* DessertRecipeView.swift */; };
 		E161FED42C7A451500B4561D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E161FED32C7A451500B4561D /* Assets.xcassets */; };
 		E161FED72C7A451500B4561D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E161FED62C7A451500B4561D /* Preview Assets.xcassets */; };
+		E1C4891B2C86414D00248728 /* NetworkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C4891A2C86414D00248728 /* NetworkState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		E161FED12C7A451300B4561D /* DessertRecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DessertRecipeView.swift; sourceTree = "<group>"; };
 		E161FED32C7A451500B4561D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E161FED62C7A451500B4561D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		E1C4891A2C86414D00248728 /* NetworkState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +116,7 @@
 			children = (
 				E10039762C7C0D7E00B83B67 /* CustomCornerRadious.swift */,
 				E10039782C7CE0B800B83B67 /* LocalizedString.swift */,
+				E1C4891A2C86414D00248728 /* NetworkState.swift */,
 			);
 			path = "Common Components";
 			sourceTree = "<group>";
@@ -275,6 +278,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1C4891B2C86414D00248728 /* NetworkState.swift in Sources */,
 				E10039792C7CE0B800B83B67 /* LocalizedString.swift in Sources */,
 				E100397B2C7CE96E00B83B67 /* RecipeCategoriesView.swift in Sources */,
 				E100397D2C7CF1AE00B83B67 /* RecipeLandingView.swift in Sources */,

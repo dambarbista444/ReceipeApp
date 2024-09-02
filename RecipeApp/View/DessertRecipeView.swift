@@ -8,65 +8,94 @@
 import SwiftUI
 
 struct DessertRecipeView: View {
-    @StateObject var viewModel =  DessertRecipeViewModel()
+    @StateObject var viewModel: DessertRecipeViewModel
     
-    @State var presentDetailsView = false
-    @State var mealId = ""
+    @State private var presentDetailsView = false
+    @State private var selectedMealId = ""
+    
+    var searchText: String
+    
+    init(searchText: String) {
+        _viewModel = StateObject(wrappedValue: DessertRecipeViewModel())
+        self.searchText = searchText
+    }
+    
+    var filteredmeals: [Meal] {
+        if searchText.isEmpty {
+            return viewModel.meals
+        } else {
+            return viewModel.meals.filter { $0.mealName?.localizedCaseInsensitiveContains(searchText) == true }
+        }
+    }
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
-            VStack(alignment: .leading) {
-                
-                ForEach(viewModel.meals, id: \.self) { meal in
-                    ZStack {
-                        Rectangle()
-                            .foregroundColor(Color(UIColor.systemBackground))
-                            .cornerRadius(15)
-                            .frame(height: 100)
-                            .shadow(radius: 2)
-                        
-                        HStack(spacing: 15) {
-                            if let imageURL = viewModel.imageUrl(for: meal) {
-                                AsyncImage(url: imageURL) { image in
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                        .frame(width: 80, height: 80)
-                                        .cornerRadius(10)
-                                        .padding(.leading, 10)
-                                } placeholder: {
-                                    ZStack {
-                                        Color.gray
-                                            .frame(width: 80, height: 80)
-                                            .cornerRadius(10)
-                                        ProgressView()
-                                    }
-                                    .padding(.leading, 10)
-                                }
-                            }
-                            
-                            Text(meal.mealName ?? "")
-                            Spacer()
-                        }
-                        .fullScreenCover(isPresented: $presentDetailsView, content: {
-                            DessertRecipeDetailsView(mealId: $mealId)
-                        })
+            VStack {
+                switch viewModel.state {
+                case .loading:
+                    ProgressView {
+                        Text(LocalizedString.loadingText)
                     }
-                    .padding([.horizontal, .top], 5)
-                    .onTapGesture {
-                        presentDetailsView = true
-                        mealId = meal.mealId ?? ""
-                    }
+                case .success:
+                    setupDessertListView()
+                case .failure:
+                    Text(LocalizedString.serviceErrorMessage)
                 }
             }
             .task {
                 await viewModel.getDessertList()
             }
+            
         }
-        .navigationTitle(LocalizedString.discoverTitleText)
+    }
+    
+    func setupDessertListView() -> some View {
+        VStack(alignment: .leading) {
+            
+            ForEach(filteredmeals, id: \.self) { meal in
+                ZStack {
+                    Rectangle()
+                        .foregroundColor(Color(UIColor.systemBackground))
+                        .cornerRadius(15)
+                        .frame(height: 100)
+                        .shadow(radius: 2)
+                    
+                    HStack(spacing: 15) {
+                        if let imageURL = viewModel.imageUrl(for: meal) {
+                            AsyncImage(url: imageURL) { image in
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 80, height: 80)
+                                    .cornerRadius(10)
+                                    .padding(.leading, 10)
+                            } placeholder: {
+                                ZStack {
+                                    Color.gray
+                                        .frame(width: 80, height: 80)
+                                        .cornerRadius(10)
+                                    ProgressView()
+                                }
+                                .padding(.leading, 10)
+                            }
+                        }
+                        
+                        Text(meal.mealName ?? "")
+                        Spacer()
+                    }
+                    .fullScreenCover(isPresented: $presentDetailsView, content: {
+                        DessertRecipeDetailsView(mealId: $selectedMealId)
+                    })
+                }
+                .padding([.horizontal, .top], 5)
+                .onTapGesture {
+                    selectedMealId = meal.mealId ?? ""
+                    presentDetailsView = true
+                }
+            }
+        }
     }
 }
-
 #Preview {
-    DessertRecipeView()
+    DessertRecipeView(searchText: "")
 }
