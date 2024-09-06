@@ -1,3 +1,4 @@
+Fetch take home assignment. 
 RecipeApp created using SwiftUI framework and swift programming language,
 the purpose of the app is get the information about how to make various types of meals, the app provides instructions and ingredients. 
 
