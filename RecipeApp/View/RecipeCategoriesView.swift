@@ -17,10 +17,10 @@ enum RecipeType: String {
 struct RecipeCategoriesView: View {
     var searchText: String
     
-    let categories = [RecipeType.dessert.rawValue,
-                      RecipeType.dinner.rawValue,
-                      RecipeType.breakfast.rawValue,
-                      RecipeType.snack.rawValue]
+    let categories = [RecipeType.dessert,
+                      RecipeType.dinner,
+                      RecipeType.breakfast,
+                      RecipeType.snack]
     
     @State var recipeType: RecipeType = .dessert
     
@@ -28,7 +28,7 @@ struct RecipeCategoriesView: View {
         VStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 18) {
-                    ForEach(categories, id: \.self) { category in
+                    ForEach(0..<categories.count, id: \.self) { index in
                         ZStack {
                             Rectangle()
                                 .foregroundColor(Color(UIColor.systemBackground))
@@ -36,18 +36,10 @@ struct RecipeCategoriesView: View {
                                 .shadow(radius: 3)
                                 .frame(width: 110, height: 45)
                                 .onTapGesture {
-                                    if category == RecipeType.dessert.rawValue {
-                                        recipeType = .dessert
-                                    } else if category == RecipeType.dinner.rawValue {
-                                        recipeType = .dinner
-                                    } else if category == RecipeType.breakfast.rawValue {
-                                        recipeType = .breakfast
-                                    } else if category == RecipeType.snack.rawValue {
-                                        recipeType = .snack
-                                    }
+                                    recipeType = categories[index]
                                 }
                             
-                            Text(category)
+                            Text(categories[index].rawValue)
                         }
                     }
                 }
